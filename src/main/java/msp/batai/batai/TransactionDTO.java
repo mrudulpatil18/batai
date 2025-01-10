@@ -12,6 +12,7 @@ public class TransactionDTO {
     private Long contract_id;
     private int amount;
     private int sharingPercent;
+    private Transaction_Type transactionType;
 
     Transaction converToTransaction(){
         Transaction t = new Transaction();
@@ -20,6 +21,7 @@ public class TransactionDTO {
         t.setDescription(description);
         t.setPaidBy(paidBy);
         t.setCropID(cropId);
+        t.setTransactionType(transactionType);
         return t;
     }
 }

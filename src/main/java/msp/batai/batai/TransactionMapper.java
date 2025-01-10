@@ -14,6 +14,7 @@ public class TransactionMapper {
             dto.setPaidBy(transaction.getPaidBy());
             dto.setCropId(transaction.getCropID());
             dto.setContract_id(transaction.getContract() != null ? transaction.getContract().getContractId() : null);
+            dto.setTransactionType(transaction.getTransactionType());
             return dto;
         }).collect(Collectors.toList());
     }
@@ -25,6 +26,7 @@ public class TransactionMapper {
             dto.setDescription(transaction.getDescription());
             dto.setPaidBy(transaction.getPaidBy());
             dto.setCropId(transaction.getCropID());
+            dto.setTransactionType(transaction.getTransactionType());
             dto.setContract_id(transaction.getContract() != null ? transaction.getContract().getContractId() : null);
             return dto;
     }
