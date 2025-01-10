@@ -1,7 +1,11 @@
-package msp.batai.batai;
+package msp.batai.batai.Controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import msp.batai.batai.Model.Contract;
+import msp.batai.batai.Service.BataiService;
+import msp.batai.batai.Dto.TransactionDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +41,7 @@ public class BataiController {
     @PostMapping("/transactions")
     public ResponseEntity<?> create(@RequestBody TransactionDTO t) {
         try {
-            return ResponseEntity.ok(bs.saveTransaction(t.converToTransaction(), t.getContract_id()));
+            return ResponseEntity.ok(bs.saveTransaction(t.convertToTransaction(), t.getContract_id()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

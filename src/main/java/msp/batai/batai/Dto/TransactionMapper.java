@@ -1,7 +1,9 @@
-package msp.batai.batai;
+package msp.batai.batai.Dto;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import msp.batai.batai.Model.Transaction;
 
 public class TransactionMapper {
 

@@ -1,4 +1,4 @@
-package msp.batai.batai;
+package msp.batai.batai.Model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import msp.batai.batai.Enum.*;
 
 @Getter
 @Setter
@@ -39,7 +41,7 @@ public class Transaction {
     
     @Enumerated(EnumType.STRING)
     @Column(name = "transaction_type")
-    Transaction_Type transactionType;
+    TransactionType transactionType;
 
     @ManyToOne
     @JoinColumn(name = "contract_id") 

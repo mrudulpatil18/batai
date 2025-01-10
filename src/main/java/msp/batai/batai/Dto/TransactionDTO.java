@@ -1,7 +1,9 @@
-package msp.batai.batai;
+package msp.batai.batai.Dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import msp.batai.batai.Enum.TransactionType;
+import msp.batai.batai.Model.Transaction;
 
 @Setter
 @Getter
@@ -12,9 +14,9 @@ public class TransactionDTO {
     private Long contract_id;
     private int amount;
     private int sharingPercent;
-    private Transaction_Type transactionType;
+    private TransactionType transactionType;
 
-    Transaction converToTransaction(){
+    public Transaction convertToTransaction(){
         Transaction t = new Transaction();
         t.setAmount(amount);
         t.setSharingPercent(sharingPercent);

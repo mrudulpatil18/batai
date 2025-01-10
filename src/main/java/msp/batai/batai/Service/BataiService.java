@@ -1,9 +1,16 @@
-package msp.batai.batai;
+package msp.batai.batai.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+
+import msp.batai.batai.Dto.TransactionDTO;
+import msp.batai.batai.Dto.TransactionMapper;
+import msp.batai.batai.Model.Contract;
+import msp.batai.batai.Model.Transaction;
+import msp.batai.batai.Repository.ContractRepository;
+import msp.batai.batai.Repository.TransactionRepository;
 
 @Service
 public class BataiService {

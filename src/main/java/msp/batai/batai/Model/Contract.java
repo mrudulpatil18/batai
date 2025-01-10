@@ -1,4 +1,4 @@
-package msp.batai.batai;
+package msp.batai.batai.Model;
 
 import java.util.List;
 
