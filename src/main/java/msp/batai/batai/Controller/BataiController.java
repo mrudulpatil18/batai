@@ -1,6 +1,7 @@
 package msp.batai.batai.Controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import msp.batai.batai.Model.Contract;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,11 +49,11 @@ public class BataiController {
         }
     }
 
-    // @ResponseStatus(HttpStatus.NO_CONTENT)
-    // @DeleteMapping("/{id}")
-    // public void deleteById(@PathVariable Long id) {
-    //     bs.deleteById(id);
-    // }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public void deleteTransactionById(@PathVariable Long id) {
+        bs.deleteTransactionById(id);
+    }
     
     @GetMapping("/contracts")
     public List<Contract> findAllContracts() {

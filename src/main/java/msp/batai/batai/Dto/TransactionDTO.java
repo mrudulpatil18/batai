@@ -1,5 +1,7 @@
 package msp.batai.batai.Dto;
 
+import java.sql.Timestamp;
+
 import lombok.Getter;
 import lombok.Setter;
 import msp.batai.batai.Enum.TransactionType;
@@ -15,6 +17,8 @@ public class TransactionDTO {
     private int amount;
     private int sharingPercent;
     private TransactionType transactionType;
+    private Timestamp timeCreated;
+    private Timestamp timeModified;
 
     public Transaction convertToTransaction(){
         Transaction t = new Transaction();
@@ -24,6 +28,8 @@ public class TransactionDTO {
         t.setPaidBy(paidBy);
         t.setCropID(cropId);
         t.setTransactionType(transactionType);
+        t.setTimeCreated(timeCreated);
+        t.setTimeModified(timeModified);
         return t;
     }
 }

@@ -1,5 +1,7 @@
 package msp.batai.batai.Model;
 
+import java.sql.Timestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -42,6 +44,12 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     @Column(name = "transaction_type")
     TransactionType transactionType;
+
+    @Column(name = "time_created")
+    Timestamp timeCreated;
+
+    @Column(name = "time_modified")
+    Timestamp timeModified;
 
     @ManyToOne
     @JoinColumn(name = "contract_id") 

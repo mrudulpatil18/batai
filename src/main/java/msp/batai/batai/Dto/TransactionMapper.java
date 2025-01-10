@@ -17,6 +17,8 @@ public class TransactionMapper {
             dto.setCropId(transaction.getCropID());
             dto.setContract_id(transaction.getContract() != null ? transaction.getContract().getContractId() : null);
             dto.setTransactionType(transaction.getTransactionType());
+            dto.setTimeCreated(transaction.getTimeCreated());
+            dto.setTimeModified(transaction.getTimeModified());
             return dto;
         }).collect(Collectors.toList());
     }
@@ -30,6 +32,8 @@ public class TransactionMapper {
             dto.setCropId(transaction.getCropID());
             dto.setTransactionType(transaction.getTransactionType());
             dto.setContract_id(transaction.getContract() != null ? transaction.getContract().getContractId() : null);
+            dto.setTimeCreated(transaction.getTimeCreated());
+            dto.setTimeModified(transaction.getTimeModified());
             return dto;
     }
 
