@@ -28,6 +28,15 @@ public class Contract {
     String owner;
     String tenant;
 
+    @Column(name = "owner_account")
+    Long ownerAccount = 0L;
+    @Column(name = "owner_due")
+    Long ownerDue = 0L;
+    @Column(name = "tenant_account")
+    Long tenantAccount = 0L;
+    @Column(name = "tenant_due")
+    Long tenantDue = 0L;
+
     @OneToMany(mappedBy = "contract")
     private List<Transaction> transactions;
 }
