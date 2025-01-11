@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import msp.batai.batai.Dto.TransactionDTO;
 import msp.batai.batai.Dto.TransactionMapper;
+import msp.batai.batai.Enum.TransactionType;
+import msp.batai.batai.Model.Balance;
 import msp.batai.batai.Model.Contract;
 import msp.batai.batai.Model.Transaction;
 import msp.batai.batai.Repository.ContractRepository;
@@ -53,5 +55,61 @@ public class BataiService {
 
     public Contract saveContract(Contract contract) {
         return contractRepository.save(contract);
+    }
+
+    public Balance balance(Contract contract){
+        Long ownerAccount = 0L, tenantAccount = 0L;
+        Long ownerDue = 0L, tenantDue = 0L;
+        for(Transaction t : contract.getTransactions()){
+            if(t.getTransactionType() == TransactionType.INCOME){
+                if(t.getPaidBy() == contract.getOwner()){
+                    ownerAccount += t.getAmount();
+                    double due = (t.getAmount() * (100-t.getSharingPercent()))/100.0;
+                    ownerDue += Math.round(due);
+                    tenantDue -= Math.round(due);
+                }else if(t.getPaidBy() == contract.getTenant()){
+                    tenantAccount += t.getAmount();
+                    double due = (t.getAmount() * (t.getSharingPercent()))/100.0;
+                    ownerDue += Math.round(due);
+                    tenantDue -= Math.round(due);
+                }else{
+                    double amtby2 = t.getAmount()/2.0;
+                    tenantAccount += Math.round(amtby2);
+                    ownerAccount += Math.round(amtby2);
+                }
+            }else if(t.getTransactionType() == TransactionType.EXPENDITURE){
+                if(t.getPaidBy() == contract.getOwner()){
+                    ownerAccount -= t.getAmount();
+                    double due = (t.getAmount() * (100-t.getSharingPercent()))/100.0;
+                    ownerDue -= Math.round(due);
+                    tenantDue += Math.round(due);
+                }else if(t.getPaidBy() == contract.getTenant()){
+                    tenantAccount -= t.getAmount();
+                    double due = (t.getAmount() * (t.getSharingPercent()))/100.0;
+                    ownerDue -= Math.round(due);
+                    tenantDue += Math.round(due);
+                }else{
+                    double amtby2 = t.getAmount()/2.0;
+                    tenantAccount -= Math.round(amtby2);
+                    ownerAccount -= Math.round(amtby2);
+                }
+            }else if(t.getTransactionType() == TransactionType.TRANSFER){
+                if(t.getPaidBy() == contract.getOwner()){
+                    int amt = t.getAmount();
+                    ownerAccount -= amt;
+                    tenantAccount += amt;
+                    ownerDue -= amt;
+                    tenantDue += amt;
+                }else if(t.getPaidBy() == contract.getTenant()){
+                    int amt = t.getAmount();
+                    ownerAccount += amt;
+                    tenantAccount -= amt;
+                    ownerDue += amt;
+                    tenantDue -= amt;
+                }
+            }
+        }
+        Balance b = new Balance(ownerAccount, ownerDue, tenantAccount, tenantDue, contract);
+        return b;
     }
 }
