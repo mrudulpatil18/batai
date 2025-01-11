@@ -40,3 +40,7 @@ public class Contract {
     @OneToMany(mappedBy = "contract")
     private List<Transaction> transactions;
 }
+
+
+//NOTE: DUE POSITIVE => to pay and vice-versa
+//NOTE: ACCOUNT POSITIVE => profit ?? (unless i messed up somewhere)

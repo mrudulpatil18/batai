@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import msp.batai.batai.Model.Contract;
 import msp.batai.batai.Service.BataiService;
+import msp.batai.batai.Dto.ContractDTO;
 import msp.batai.batai.Dto.TransactionDTO;
 
 import java.util.List;
@@ -56,19 +56,19 @@ public class BataiController {
     }
     
     @GetMapping("/contracts")
-    public List<Contract> findAllContracts() {
+    public List<ContractDTO> findAllContracts() {
         return bs.findAllContracts();
     }
 
     @GetMapping("/contracts/{id}")
-    public Optional<Contract> findContractById(@PathVariable Long id){
+    public Optional<ContractDTO> findContractById(@PathVariable Long id){
         return bs.findContractById(id);
     }
     
     @PostMapping("/contracts")
-    public ResponseEntity<?> create(@RequestBody Contract t) {
+    public ResponseEntity<?> create(@RequestBody ContractDTO t) {
         try {
-            return ResponseEntity.ok(bs.saveContract(t));
+            return ResponseEntity.ok(bs.saveContract(t.convertToContract()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

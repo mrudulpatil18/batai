@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import msp.batai.batai.Dto.ContractDTO;
+import msp.batai.batai.Dto.ContractMapper;
 import msp.batai.batai.Dto.TransactionDTO;
 import msp.batai.batai.Dto.TransactionMapper;
 import msp.batai.batai.Enum.TransactionType;
@@ -100,19 +102,19 @@ public class BataiService {
     }
 
     // Contract methods
-    public List<Contract> findAllContracts() {
-        return contractRepository.findAll();
+    public List<ContractDTO> findAllContracts() {
+        return ContractMapper.convertToDTOContractList(contractRepository.findAll());
     }
 
-    public Optional<Contract> findContractById(Long id) {
-        return contractRepository.findById(id);
+    public Optional<ContractDTO> findContractById(Long id) {
+        return contractRepository.findById(id).map(ContractMapper::convertToDTOContract);
     }
 
     public Contract saveContract(Contract contract) {
         return contractRepository.save(contract);
     }
 
-    // TODO : actual useful features - Maybe SOMEDAY
+    // TODO : actual useful features 
 
     public Contract recalculateBalance(Contract c) {
         Long ownerAccount = 0L, tenantAccount = 0L;
