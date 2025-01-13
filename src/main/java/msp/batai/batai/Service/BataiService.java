@@ -114,8 +114,6 @@ public class BataiService {
         return contractRepository.save(contract);
     }
 
-    // TODO : actual useful features 
-
     public Contract recalculateBalance(Contract c) {
         Long ownerAccount = 0L, tenantAccount = 0L;
         Long ownerDue = 0L, tenantDue = 0L;
