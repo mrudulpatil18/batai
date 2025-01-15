@@ -68,7 +68,7 @@ public class BataiController {
     @PostMapping("/contracts")
     public ResponseEntity<?> create(@RequestBody ContractDTO t) {
         try {
-            return ResponseEntity.ok(bs.saveContract(t.convertToContract()));
+            return ResponseEntity.ok(bs.saveContract(t));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

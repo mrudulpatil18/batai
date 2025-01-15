@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -25,8 +27,14 @@ public class Contract {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "contract_id")
     Long contractId;
-    String owner;
-    String tenant;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    User owner;
+
+    @ManyToOne
+    @JoinColumn(name = "tenant_id")
+    User tenant;
 
     @Column(name = "owner_account")
     Long ownerAccount = 0L;
