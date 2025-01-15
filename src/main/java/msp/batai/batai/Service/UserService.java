@@ -1,10 +1,12 @@
 package msp.batai.batai.Service;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import msp.batai.batai.Model.User;
 import msp.batai.batai.Repository.UserRepository;
+import msp.batai.batai.security.SecurityUser;
 
 @Service
 public class UserService {
@@ -28,5 +30,9 @@ public class UserService {
             return true;
         }
         return false;
+    }
+
+    public UserDetails loadUserByUsername(String userName) {
+        return new SecurityUser(userRepository.findByUsername(userName));
     }
 }
