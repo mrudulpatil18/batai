@@ -39,8 +39,14 @@ public class BataiService {
         return transactionRepository.findById(id).map(TransactionMapper::convertToDTOTransaction);
     }
 
-    public TransactionDTO saveTransaction(Transaction transaction, Long contract_id) {
-        Contract c = contractRepository.findById(contract_id).get();
+    public TransactionDTO saveTransaction(TransactionDTO transactionDTO, Long contract_id) {
+        Contract c = contractRepository.findById(contract_id)
+            .orElseThrow(() -> new IllegalArgumentException("Contract with id " + contract_id + " not found"));
+        User paidBy = userRepository.findByUsername(transactionDTO.getPaidBy());
+        if (paidBy == null) {
+            throw new IllegalArgumentException("Payer with username " + transactionDTO.getPaidBy() + " not found");
+        }
+        Transaction transaction = TransactionMapper.convertDTOToTransaction(transactionDTO, paidBy);
         transaction.setContract(c);
         Long ownerAccount = c.getOwnerAccount(), tenantAccount = c.getTenantAccount();
         Long ownerDue = c.getOwnerDue(), tenantDue = c.getTenantDue();

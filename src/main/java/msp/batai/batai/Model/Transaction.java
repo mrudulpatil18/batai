@@ -34,8 +34,10 @@ public class Transaction {
 
     String description;
 
-    @Column(name = "paid_by")
-    String paidBy;
+    @ManyToOne
+    @JoinColumn(name = "paid_by")
+    User paidBy;
+
     int amount;
 
     @Column(name = "sharing_percent")
