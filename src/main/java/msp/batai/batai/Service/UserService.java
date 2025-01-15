@@ -22,6 +22,11 @@ public class UserService {
         userRepository.save(user);
     }
 
-
-
+    public boolean loginUser(User user){
+        User dbUser = userRepository.findByUsername(user.getUsername());
+        if(dbUser != null  &&passwordEncoder.encode(user.getPassword()).equals(dbUser.getPassword())){
+            return true;
+        }
+        return false;
+    }
 }

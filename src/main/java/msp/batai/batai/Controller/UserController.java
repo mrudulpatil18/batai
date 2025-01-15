@@ -20,8 +20,14 @@ public class UserController {
     }
 
     @PostMapping("/user/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
+    public ResponseEntity<String> registerUser(@RequestBody User user) {
         userService.registerUser(user);
-        return ResponseEntity.ok("User registered Succesfully");
+        return ResponseEntity.ok("User registered successfully");
+    }
+
+    @PostMapping("/user/login")
+    public ResponseEntity<String> loginUser() {
+        return ResponseEntity.ok("Login successful"); 
+        
     }
 }
