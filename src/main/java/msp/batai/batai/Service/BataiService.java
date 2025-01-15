@@ -46,18 +46,21 @@ public class BataiService {
         if (paidBy == null) {
             throw new IllegalArgumentException("Payer with username " + transactionDTO.getPaidBy() + " not found");
         }
+        if (!c.getOwner().equals(paidBy) && !c.getTenant().equals(paidBy)){
+            throw new IllegalArgumentException("User " + paidBy.getUsername() + " not part of contract");
+        };
         Transaction transaction = TransactionMapper.convertDTOToTransaction(transactionDTO, paidBy);
         transaction.setContract(c);
         Long ownerAccount = c.getOwnerAccount(), tenantAccount = c.getTenantAccount();
         Long ownerDue = c.getOwnerDue(), tenantDue = c.getTenantDue();
 
         if (transaction.getTransactionType().equals(TransactionType.INCOME)) {
-            if (transaction.getPaidBy().equals(c.getOwner().getUsername())) {
+            if (transaction.getPaidBy().equals(c.getOwner())) {
                 ownerAccount += transaction.getAmount();
                 double due = (transaction.getAmount() * (100 - transaction.getSharingPercent())) / 100.0;
                 ownerDue += Math.round(due);
                 tenantDue -= Math.round(due);
-            } else if (transaction.getPaidBy().equals(c.getTenant().getUsername())) {
+            } else if (transaction.getPaidBy().equals(c.getTenant())){
                 tenantAccount += transaction.getAmount();
                 double due = (transaction.getAmount() * (transaction.getSharingPercent())) / 100.0;
                 ownerDue -= Math.round(due);
@@ -68,12 +71,12 @@ public class BataiService {
                 ownerAccount += Math.round(amtby2);
             }
         } else if (transaction.getTransactionType().equals(TransactionType.EXPENDITURE)) {
-            if (transaction.getPaidBy().equals(c.getOwner().getUsername())) {
+            if (transaction.getPaidBy().equals(c.getOwner())) {
                 ownerAccount -= transaction.getAmount();
                 double due = (transaction.getAmount() * (100 - transaction.getSharingPercent())) / 100.0;
                 ownerDue -= Math.round(due);
                 tenantDue += Math.round(due);
-            } else if (transaction.getPaidBy().equals(c.getTenant().getUsername())) {
+            } else if (transaction.getPaidBy().equals(c.getTenant())) {
                 tenantAccount -= transaction.getAmount();
                 double due = (transaction.getAmount() * (transaction.getSharingPercent())) / 100.0;
                 ownerDue += Math.round(due);
@@ -84,13 +87,13 @@ public class BataiService {
                 ownerAccount -= Math.round(amtby2);
             }
         } else if (transaction.getTransactionType().equals(TransactionType.TRANSFER)) {
-            if (transaction.getPaidBy().equals(c.getOwner().getUsername())) {
+            if (transaction.getPaidBy().equals(c.getOwner())) {
                 int amt = transaction.getAmount();
                 ownerAccount -= amt;
                 tenantAccount += amt;
                 ownerDue -= amt;
                 tenantDue += amt;
-            } else if (transaction.getPaidBy().equals(c.getTenant().getUsername())) {
+            } else if (transaction.getPaidBy().equals(c.getTenant())) {
                 int amt = transaction.getAmount();
                 ownerAccount += amt;
                 tenantAccount -= amt;
@@ -133,7 +136,7 @@ public class BataiService {
         
         // Validate that owner and tenant are different users
         if (owner.getUsername().equals(tenant.getUsername())) {
-            throw new IllegalArgumentException("Owner and tenant cannot be the same user");
+            throw new IllegalArgumentException("User doesnt belong to the contract");
         }
         Contract c = ContractMapper.convertDTOtoContract(contractDto, owner, tenant);
         return contractRepository.save(c);
@@ -144,12 +147,12 @@ public class BataiService {
         Long ownerDue = 0L, tenantDue = 0L;
         for (Transaction transaction : c.getTransactions()) {
             if (transaction.getTransactionType().equals(TransactionType.INCOME)) {
-                if (transaction.getPaidBy().equals(c.getOwner().getUsername())) {
+                if (transaction.getPaidBy().equals(c.getOwner())) {
                     ownerAccount += transaction.getAmount();
                     double due = (transaction.getAmount() * (100 - transaction.getSharingPercent())) / 100.0;
                     ownerDue += Math.round(due);
                     tenantDue -= Math.round(due);
-                } else if (transaction.getPaidBy().equals(c.getTenant().getUsername())) {
+                } else if (transaction.getPaidBy().equals(c.getTenant())) {
                     tenantAccount += transaction.getAmount();
                     double due = (transaction.getAmount() * (transaction.getSharingPercent())) / 100.0;
                     ownerDue -= Math.round(due);
@@ -160,12 +163,12 @@ public class BataiService {
                     ownerAccount += Math.round(amtby2);
                 }
             } else if (transaction.getTransactionType().equals(TransactionType.EXPENDITURE)) {
-                if (transaction.getPaidBy().equals(c.getOwner().getUsername())) {
+                if (transaction.getPaidBy().equals(c.getOwner())) {
                     ownerAccount -= transaction.getAmount();
                     double due = (transaction.getAmount() * (100 - transaction.getSharingPercent())) / 100.0;
                     ownerDue -= Math.round(due);
                     tenantDue += Math.round(due);
-                } else if (transaction.getPaidBy().equals(c.getTenant().getUsername())) {
+                } else if (transaction.getPaidBy().equals(c.getTenant())) {
                     tenantAccount -= transaction.getAmount();
                     double due = (transaction.getAmount() * (transaction.getSharingPercent())) / 100.0;
                     ownerDue += Math.round(due);
@@ -176,13 +179,13 @@ public class BataiService {
                     ownerAccount -= Math.round(amtby2);
                 }
             } else if (transaction.getTransactionType().equals(TransactionType.TRANSFER)) {
-                if (transaction.getPaidBy().equals(c.getOwner().getUsername())) {
+                if (transaction.getPaidBy().equals(c.getOwner())) {
                     int amt = transaction.getAmount();
                     ownerAccount -= amt;
                     tenantAccount += amt;
                     ownerDue -= amt;
                     tenantDue += amt;
-                } else if (transaction.getPaidBy().equals(c.getTenant().getUsername())) {
+                } else if (transaction.getPaidBy().equals(c.getTenant())) {
                     int amt = transaction.getAmount();
                     ownerAccount += amt;
                     tenantAccount -= amt;
