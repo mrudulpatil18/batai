@@ -30,33 +30,37 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/auth/register")
-    public ResponseEntity<String> registerUser(@RequestBody User user) {
+public ResponseEntity<?> registerUser(@RequestBody User user) {
+    try {
         userService.registerUser(user);
-        return ResponseEntity.ok("User registered successfully");
+        // Return a JSON object for successful registration
+        return ResponseEntity.ok(Map.of("message", "User registered successfully"));
+    } catch (IllegalArgumentException e) {
+        // Return a JSON object for an error
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                .body(Map.of("message", "User already exists"));
     }
+}
+
 
     @PostMapping("/auth/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody User loginRequest) {
         try {
-            // Create authentication token
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     loginRequest.getUsername(), loginRequest.getPassword());
 
-            // Authenticate the user
             authenticationManager.authenticate(authToken);
 
-            // Generate JWT token
             String token = jwtUtil.generateToken(loginRequest.getUsername());
+            User u = userService.findUserByUsername(loginRequest.getUsername());
 
-            // Return the token
-            return ResponseEntity.ok(Map.of("token", token));
-
+            return ResponseEntity.ok(Map.of("token", token, "user", u));
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Invalid username or password");
+                    .body(Map.of("message", "Invalid username or password"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error during authentication");
+                    .body(Map.of("message", "Error during authentication"));
         }
     }
 

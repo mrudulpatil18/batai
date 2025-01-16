@@ -20,6 +20,9 @@ public class UserService {
     }
 
     public void registerUser(User user) {
+        if(findUserByUsername(user.getUsername()) != null){
+            throw new IllegalArgumentException("Username " + user.getUsername() + " already taken");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
@@ -34,5 +37,9 @@ public class UserService {
 
     public UserDetails loadUserByUsername(String userName) {
         return new SecurityUser(userRepository.findByUsername(userName));
+    }
+
+    public User findUserByUsername(String userName){
+        return userRepository.findByUsername(userName);
     }
 }
