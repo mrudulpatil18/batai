@@ -32,9 +32,9 @@ public class UserController {
     @PostMapping("/auth/register")
 public ResponseEntity<?> registerUser(@RequestBody User user) {
     try {
-        userService.registerUser(user);
+        User u = userService.registerUser(user);
         // Return a JSON object for successful registration
-        return ResponseEntity.ok(Map.of("message", "User registered successfully"));
+        return ResponseEntity.ok(Map.of("message", "User registered successfully", "user", u));
     } catch (IllegalArgumentException e) {
         // Return a JSON object for an error
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)

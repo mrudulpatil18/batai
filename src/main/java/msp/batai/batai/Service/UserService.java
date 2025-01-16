@@ -19,12 +19,12 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void registerUser(User user) {
+    public User registerUser(User user) {
         if(findUserByUsername(user.getUsername()) != null){
             throw new IllegalArgumentException("Username " + user.getUsername() + " already taken");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     public boolean loginUser(User user){
