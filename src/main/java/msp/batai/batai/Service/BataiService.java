@@ -146,63 +146,6 @@ public class BataiService {
         return contractRepository.save(c);
     }
 
-    public Contract recalculateBalance(Contract c) {
-        Long ownerAccount = 0L, tenantAccount = 0L;
-        Long ownerDue = 0L, tenantDue = 0L;
-        for (Transaction transaction : c.getTransactions()) {
-            if (transaction.getTransactionType().equals(TransactionType.INCOME)) {
-                if (transaction.getPaidBy().equals(c.getOwner())) {
-                    ownerAccount += transaction.getAmount();
-                    double due = (transaction.getAmount() * (100 - transaction.getSharingPercent())) / 100.0;
-                    ownerDue += Math.round(due);
-                    tenantDue -= Math.round(due);
-                } else if (transaction.getPaidBy().equals(c.getTenant())) {
-                    tenantAccount += transaction.getAmount();
-                    double due = (transaction.getAmount() * (transaction.getSharingPercent())) / 100.0;
-                    ownerDue -= Math.round(due);
-                    tenantDue += Math.round(due);
-                } else {
-                    double amtby2 = transaction.getAmount() / 2.0;
-                    tenantAccount += Math.round(amtby2);
-                    ownerAccount += Math.round(amtby2);
-                }
-            } else if (transaction.getTransactionType().equals(TransactionType.EXPENDITURE)) {
-                if (transaction.getPaidBy().equals(c.getOwner())) {
-                    ownerAccount -= transaction.getAmount();
-                    double due = (transaction.getAmount() * (100 - transaction.getSharingPercent())) / 100.0;
-                    ownerDue -= Math.round(due);
-                    tenantDue += Math.round(due);
-                } else if (transaction.getPaidBy().equals(c.getTenant())) {
-                    tenantAccount -= transaction.getAmount();
-                    double due = (transaction.getAmount() * (transaction.getSharingPercent())) / 100.0;
-                    ownerDue += Math.round(due);
-                    tenantDue -= Math.round(due);
-                } else {
-                    double amtby2 = transaction.getAmount() / 2.0;
-                    tenantAccount -= Math.round(amtby2);
-                    ownerAccount -= Math.round(amtby2);
-                }
-            } else if (transaction.getTransactionType().equals(TransactionType.TRANSFER)) {
-                if (transaction.getPaidBy().equals(c.getOwner())) {
-                    int amt = transaction.getAmount();
-                    ownerAccount -= amt;
-                    tenantAccount += amt;
-                    ownerDue -= amt;
-                    tenantDue += amt;
-                } else if (transaction.getPaidBy().equals(c.getTenant())) {
-                    int amt = transaction.getAmount();
-                    ownerAccount += amt;
-                    tenantAccount -= amt;
-                    ownerDue += amt;
-                    tenantDue -= amt;
-                }
-            }
-        }
-        Contract contract = new Contract(tenantDue, c.getOwner(), c.getTenant(), ownerAccount, ownerDue,
-                tenantAccount, tenantDue, c.getTransactions());
-        return contract;
-    }
-
     public List<TransactionDTO> findTransactionByContract(Long contractId) {
         Contract c = contractRepository.findById(contractId).get();
         if(c == null){
