@@ -120,6 +120,10 @@ public class BataiService {
     }
 
     public Optional<ContractDTO> findContractById(Long id) {
+        Optional<ContractDTO> c = contractRepository.findById(id).map(ContractMapper::convertToDTOContract);
+        if(c.isEmpty()){
+            throw new IllegalArgumentException("Contract with Id not found"); 
+        }
         return contractRepository.findById(id).map(ContractMapper::convertToDTOContract);
     }
 
@@ -197,5 +201,18 @@ public class BataiService {
         Contract contract = new Contract(tenantDue, c.getOwner(), c.getTenant(), ownerAccount, ownerDue,
                 tenantAccount, tenantDue, c.getTransactions());
         return contract;
+    }
+
+    public List<TransactionDTO> findTransactionByContract(Long contractId) {
+        Contract c = contractRepository.findById(contractId).get();
+        if(c == null){
+            throw new IllegalArgumentException("No contract found");
+        }
+        return TransactionMapper.convertToDTOTransactions(transactionRepository.findByContract(c));
+    }
+
+    public List<ContractDTO> findContractsByUserName(String userName) {
+        User u = userRepository.findByUsername(userName);
+        return ContractMapper.convertToDTOContractList(contractRepository.findByUser(u));
     }
 }
