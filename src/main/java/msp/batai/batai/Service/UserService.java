@@ -19,11 +19,14 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User registerUser(User user) {
+    public User registerUser(User user){
         if(findUserByUsername(user.getUsername()) != null){
             throw new IllegalArgumentException("Username " + user.getUsername() + " already taken");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if(user.getPhoneNumber() > 9999999999L && user.getPhoneNumber() <= 999999999L){
+            throw new IllegalArgumentException("Invalid Mobile Number");
+        }
         return userRepository.save(user);
     }
 
@@ -41,5 +44,12 @@ public class UserService {
 
     public User findUserByUsername(String userName){
         return userRepository.findByUsername(userName);
+    }
+
+    public boolean doesUserExist(String username){
+        if(findUserByUsername(username) != null){
+            return true;
+        }
+        return false;
     }
 }

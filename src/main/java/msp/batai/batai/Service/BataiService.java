@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-
 import msp.batai.batai.Dto.ContractDTO;
 import msp.batai.batai.Dto.ContractMapper;
 import msp.batai.batai.Dto.TransactionDTO;
@@ -131,6 +130,24 @@ public class BataiService {
         return contractRepository.findById(id).map(ContractMapper::convertToDTOContract);
     }
 
+    public User findOwnerByContractId(Long id){
+
+        Optional<Contract> c = contractRepository.findById(id);
+        if(c.isEmpty()){
+            throw new IllegalArgumentException("Contract with ID not found");
+        }
+        return c.get().getOwner();
+    }
+
+    public User findTenantByContractId(Long id){
+
+        Optional<Contract> c = contractRepository.findById(id);
+        if(c.isEmpty()){
+            throw new IllegalArgumentException("Contract with ID not found");
+        }
+        return c.get().getTenant();
+    }
+
     public Contract saveContract(ContractDTO contractDto) {
         User owner = userRepository.findByUsername(contractDto.getOwner());
         User tenant = userRepository.findByUsername(contractDto.getTenant());
@@ -162,4 +179,15 @@ public class BataiService {
         User u = userRepository.findByUsername(userName);
         return ContractMapper.convertToDTOContractList(contractRepository.findByUser(u));
     }
+
+	public User findContractOwnerById(Long contractId) {
+        Contract c = contractRepository.findById(contractId).get();
+        return c.getOwner();
+	}
+
+    
+	public User findContractTenantById(Long contractId) {
+        Contract c = contractRepository.findById(contractId).get();
+        return c.getTenant();
+	}
 }

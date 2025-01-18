@@ -115,4 +115,9 @@ public class BataiController {
         }
     }
 
+    @GetMapping("/users/{contractId}")
+    public ResponseEntity<?> getUser(@PathVariable Long contractId) {
+        return ResponseEntity.ok(Map.of("owner", bs.findOwnerByContractId(contractId), "tenant", bs.findTenantByContractId(contractId)));
+    }
+
 }

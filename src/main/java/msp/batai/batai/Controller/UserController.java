@@ -16,6 +16,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 public class UserController {
@@ -30,17 +33,17 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/auth/register")
-public ResponseEntity<?> registerUser(@RequestBody User user) {
-    try {
-        User u = userService.registerUser(user);
-        // Return a JSON object for successful registration
-        return ResponseEntity.ok(Map.of("message", "User registered successfully", "user", u));
-    } catch (IllegalArgumentException e) {
-        // Return a JSON object for an error
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                .body(Map.of("message", "User already exists"));
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
+        try {
+            User u = userService.registerUser(user);
+            // Return a JSON object for successful registration
+            return ResponseEntity.ok(Map.of("message", "User registered successfully", "user", u));
+        } catch (IllegalArgumentException e) {
+            // Return a JSON object for an error
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                    .body(Map.of("message", "User already exists"));
+        }
     }
-}
 
 
     @PostMapping("/auth/login")
@@ -63,5 +66,11 @@ public ResponseEntity<?> registerUser(@RequestBody User user) {
                     .body(Map.of("message", "Error during authentication"));
         }
     }
+
+    @GetMapping("/user/{username}")
+    public boolean checkUserExistence(@PathVariable String username) {
+        return userService.doesUserExist(username);
+    }
+    
 
 }
