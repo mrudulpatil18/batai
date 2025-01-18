@@ -1,5 +1,7 @@
 package msp.batai.batai.Service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -105,6 +107,8 @@ public class BataiService {
         c.setTenantAccount(tenantAccount);
         c.setOwnerDue(ownerDue);
         c.setTenantDue(tenantDue);
+
+        transactionDTO.setTimeModified(Timestamp.from(Instant.now()));
         contractRepository.save(c);
 
         return TransactionMapper.convertToDTOTransaction(transactionRepository.save(transaction));
